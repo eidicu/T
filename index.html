@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>عرض التقييمات</title>
+</head>
+<body>
+  <h1>التقييمات</h1>
+  
+  <div id="reviewsContainer"></div>
+
+  <script>
+    // جلب البيانات من Google Apps Script API
+    fetch('https://script.google.com/macros/s/AKfycbxy39IhYABhJ18DH4NWJTqQrCUYWf7Pj05BiBhYp-EWdN5HojgcYmHWTgS8RYN7LUh9Jg/exec')
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById('reviewsContainer');
+        data.forEach(item => {
+          const reviewElement = document.createElement('div');
+          reviewElement.style.border = '1px solid #ccc';
+          reviewElement.style.margin = '10px';
+          reviewElement.style.padding = '10px';
+
+          reviewElement.innerHTML = `
+            <h3>${item.name}</h3>
+            <p><strong>التقييم:</strong> ${item.rating}</p>
+            <p><strong>المراجعة:</strong> ${item.review}</p>
+          `;
+          
+          container.appendChild(reviewElement);
+        });
+      })
+      .catch(error => {
+        console.error('حدث خطأ في جلب البيانات:', error);
+      });
+  </script>
+</body>
+</html>
