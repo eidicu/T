@@ -1,58 +1,51 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>صفحة الكتابة</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إرسال البيانات إلى Google Apps Script</title>
+    <script>
+        // دالة لإرسال البيانات إلى API باستخدام POST
+        function sendData() {
+            var url = 'https://script.google.com/macros/s/AKfycbxAofJsWKZwEyBzPUnbkMQLwnGhX6YOXK35oZYYJIDpnAiGcf1wps6ayTJfCJ3u2zQw/exec';
+            
+            // بيانات النموذج
+            var data = {
+                "name": document.getElementById("name").value,
+                "age": document.getElementById("age").value
+            };
+
+            // إرسال البيانات باستخدام POST
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())  // تحويل الاستجابة إلى JSON
+            .then(data => {
+                // عرض رسالة النجاح أو الرد من السيرفر
+                document.getElementById("responseMessage").innerHTML = "تم إرسال البيانات بنجاح!";
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById("responseMessage").innerHTML = "حدث خطأ أثناء إرسال البيانات!";
+            });
+        }
+    </script>
 </head>
 <body>
-  <h1>إضافة تقييم</h1>
-  
-  <form id="reviewForm">
-    <label for="name">الاسم:</label><br>
-    <input type="text" id="name" name="name" required><br><br>
-    
-    <label for="rating">التقييم:</label><br>
-    <input type="number" id="rating" name="rating" min="1" max="5" required><br><br>
-    
-    <label for="review">المراجعة:</label><br>
-    <textarea id="review" name="review" required></textarea><br><br>
-    
-    <button type="submit">إرسال</button>
-  </form>
-
-  <script>
-    document.getElementById('reviewForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      const name = document.getElementById('name').value;
-      const rating = document.getElementById('rating').value;
-      const review = document.getElementById('review').value;
-
-      const data = {
-        name: name,
-        rating: rating,
-        review: review
-      };
-
-      // إرسال البيانات إلى Google Apps Script API
-      fetch('https://script.google.com/macros/s/AKfycbxy39IhYABhJ18DH4NWJTqQrCUYWf7Pj05BiBhYp-EWdN5HojgcYmHWTgS8RYN7LUh9Jg/exec', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
-      .then(response => response.json())
-      .then(data => {
-        alert('تم إرسال التقييم بنجاح!');
-        document.getElementById('reviewForm').reset();
-      })
-      .catch(error => {
-        alert('حدث خطأ أثناء إرسال التقييم.');
-        console.error(error);
-      });
-    });
-  </script>
+    <h1>إرسال البيانات إلى API</h1>
+    <form onsubmit="event.preventDefault(); sendData();">
+        <label for="name">الاسم:</label>
+        <input type="text" id="name" required><br><br>
+        
+        <label for="age">العمر:</label>
+        <input type="number" id="age" required><br><br>
+        
+        <button type="submit">إرسال</button>
+    </form>
+    <p id="responseMessage"></p> <!-- عرض الرسالة بعد الإرسال -->
 </body>
 </html>
